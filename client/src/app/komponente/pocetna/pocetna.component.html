@@ -1,0 +1,89 @@
+<meni></meni>
+<div class="pocetna-pozadina"> 
+    <div class="kastmSelect"> 
+        <form role="form" [formGroup]="formSort" novalidate>
+            <select formControlName="sortKriterijum" class="razmak">
+                <option value="" disabled selected hidden>Izaberite kriterijum...</option>
+                <option value="cena"> Cena </option>
+                <option value="brojkreveta"> Broj kreveta </option>
+                <option value="brojsoba"> Broj soba </option>
+            </select>
+            <button (click)="sortiraj()" class="btn btn-primary btn-round btn-info"> Sortiraj </button>
+        </form>
+
+        <form role="form" [formGroup]="formPretraga" novalidate>
+            <select formControlName="pretragaKriterijum" class="razmak">
+                <option value="" disabled selected hidden>Izaberite kriterijum...</option>
+                <option value="cena"> Maksimalna cena </option>
+                <option value="brojkreveta"> Broju kreveta </option>
+                <option value="brojsoba"> Broju soba </option>
+            </select>
+            <input formControlName="brojPretrage" type="text" class="razmak">
+            <button (click)="pretrazi()" class="btn btn-primary btn-round btn-info"> Pretrazi </button>
+        </form>
+    </div>
+
+    <div *ngFor='let smestaj of smestaji'>
+        <div class="container">
+            <div id="typography">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="typography-line">
+                            <blockquote>
+                                <div class="blockquote blockquote-primary">
+                                    <img [src]='smestaj.slika' alt="Raised Image" class="rounded img-raised">
+
+                                    <div class="ocena">
+                                        <div *ngIf="izracunajProsecnuOcenu(smestaj); else nemaOcenu">
+                                            {{prosecnaOcena}} <img src="assets/img/zvezda.png" class="razmakLevo">
+                                        </div> <br>                                                                                                       
+                                                                                                            
+                                        <ng-template class="ocena" #nemaOcenu>
+                                            Nema ocena.
+                                        </ng-template>  <br>   
+                                    </div>           
+
+                                    <h3> {{smestaj.naziv}} </h3> 
+                                    Destinacija: {{smestaj.iddestinacija.grad}}, {{smestaj.iddestinacija.drzava}} <br>
+                                    {{smestaj.opis}} <br>
+                                    Broj soba: {{smestaj.brojsoba}} <br> 
+                                    Broj kreveta: {{smestaj.brojkreveta}} <br>
+                                    Cena nocenja: {{smestaj.cenanocenja}} din
+                                    <br>
+                                    <br>
+                                    <div *ngIf='smestaj.idkorisnikvlasnik != ulogovanId'> <button (click)="rezervisiDatume(smestaj.idsmestaj)" class="btn btn-primary btn-round btn-info"> Rezervisi datume</button> </div>
+                                    <div *ngIf='rezervisiKliknuto && smestajId == smestaj.idsmestaj'>
+                                        <form role="form" [formGroup]="form" novalidate name="rezervacijaForm" >
+                                            Datum dolaska: <input formControlName="checkIn" type="date" class="razmakLevo"> <br>
+                                            Datum odlaska: <input formControlName="checkOut" type="date" class="razmakLevo"> <br>
+                                            <div class="desnoDugme"> <button (click)="rezervisi(smestaj.idsmestaj, smestaj.cenanocenja)" class="btn btn-primary btn-round btn-info" type="submit">Rezervisi</button> </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </blockquote>
+                        </div>
+                        <div *ngIf="smestajNotifikacija == smestaj.idsmestaj">
+                            <div class="section" id="notifications">
+                                <ngb-alert [type]="notifikacija.type"  [dismissible]="false" >
+                                    <div class="container">
+                                        <div class="alert-wrapper">
+                                            <button type="button" name="button" class="close" (click)="closeAlert(alert)">
+                                              <span aria-hidden="true">
+                                                  <i class="now-ui-icons ui-1_simple-remove"></i>
+                                              </span>
+                                            </button>
+                                            <div class="message">
+                                                <strong>{{notifikacija.strong}} </strong>{{ notifikacija.message }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ngb-alert>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

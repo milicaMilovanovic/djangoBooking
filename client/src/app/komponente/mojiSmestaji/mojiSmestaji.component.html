@@ -1,0 +1,99 @@
+<meni></meni> 
+<div class="kastmSelect"> 
+    <form role="form" [formGroup]="formSort" novalidate>
+        <select formControlName="sortKriterijum" class="razmak">
+            <option value="" disabled selected hidden>Izaberite kriterijum...</option>
+            <option value="cena"> Cena </option>
+            <option value="brojkreveta"> Broj kreveta </option>
+            <option value="brojsoba"> Broj soba </option>
+        </select>
+        <button (click)="sortiraj()" class="btn btn-primary btn-round btn-info"> Sortiraj </button>
+    </form>
+
+    <form role="form" [formGroup]="formPretraga" novalidate>
+        <select formControlName="pretragaKriterijum" class="razmak">
+            <option value="" disabled selected hidden>Izaberite kriterijum...</option>
+            <option value="cena"> Maksimalna cena </option>
+            <option value="brojkreveta"> Broj kreveta </option>
+            <option value="brojsoba"> Broj soba </option>
+        </select>
+        <input formControlName="brojPretrage" type="text" class="razmak">
+        <button (click)="pretrazi()" class="btn btn-primary btn-round btn-info"> Pretrazi </button>
+    </form>
+
+    <!-- ovo je modal -->
+    <button class="btn btn-primary" (click)="open(classic)">
+        Dodaj smestaj
+    </button>
+    <ng-template #classic let-c="close" let-d="dismiss">
+        <form role="form" [formGroup]="form" novalidate name="noviSmestajForm">
+            <div class="modal-header justify-content-center">
+                <button type="button" class="close" (click)="c('Cross click')">
+                    <i class="now-ui-icons ui-1_simple-remove"></i>
+                </button>
+                <h4 class="title title-up">Unos detalja o smestaju</h4>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tr> <th> Naziv:</th> <th> <input formControlName="naziv" type="text" class="input-razmak"> </th> </tr>
+                    <tr> <th> Broj soba:</th> <th> <input formControlName="brojsoba" type="text" class="input-razmak"> </th> </tr>
+                    <tr> <th> Broj kreveta:</th> <th> <input formControlName="brojkreveta" type="text" class="input-razmak"> </th> </tr>
+                    <tr> <th> Cena nocenja:</th> <th> <input formControlName="cenanocenja" type="text" class="input-razmak"> </th> </tr>
+                    <tr> <th> Opis:</th> <th> <input formControlName="opis" type="text" class="input-razmak"> </th> </tr>
+                    <tr> <th> Destinacija: </th> 
+                    <th> <select formControlName="destinacija" class="input-razmak">
+                        <option *ngFor="let dest of destinacije" [value]='dest.iddestinacija'>{{dest.grad}}, {{dest.drzava}}</option>
+                    </select> </th> </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-round btn-default" (click)="c('Close click')">Close</button>
+                <button type="button" class="btn btn-primary btn-round btn-info" (click)="dodajSmestaj(); c('Close click')">Dodaj</button>
+            </div>
+        </form>
+    </ng-template>
+    <!-- ovo je kraj modala -->
+
+</div>
+
+
+<div *ngIf="mojiSmestaji?.length > 0; else nemaMojihSmestaja">
+    <div *ngFor='let smestaj of mojiSmestaji'>
+        <!-- <div class="section"> -->
+            <div class="container">
+                <div id="typography">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="typography-line">
+                                <blockquote>
+                                    <div class="blockquote blockquote-primary">
+                                        <img [src]='smestaj.slika' alt="Raised Image" class="rounded img-raised">
+                                        <div class="ocena">
+                                            <div *ngIf="izracunajProsecnuOcenu(smestaj)">
+                                                {{prosecnaOcena}} <img src="assets/img/zvezda.png" class="razmakLevo">
+                                            </div> 
+                                        </div>
+                                        <br>
+                                        <h3> {{smestaj.naziv}} </h3>
+                                        Broj soba: {{smestaj.brojsoba}} <br>
+                                        {{smestaj.opis}} <br>
+                                        Broj kreveta: {{smestaj.brojkreveta}} <br>
+                                        Cena nocenja: {{smestaj.cenanocenja}} din <br>  
+                                        Destinacija: {{smestaj.iddestinacija.grad}}, {{smestaj.iddestinacija.drzava}}                         
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- </div> -->
+    </div>
+</div>
+
+<ng-template #nemaMojihSmestaja>
+    Nemate svojih smestaja.
+  </ng-template>

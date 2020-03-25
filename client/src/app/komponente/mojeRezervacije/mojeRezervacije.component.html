@@ -1,0 +1,55 @@
+<meni></meni> 
+<br>
+<div class="naslov">Rezervacije</div>
+<div *ngIf="mojeRezervacije?.length > 0; else nemaRez">
+    <div *ngFor='let rez of mojeRezervacije'>
+        <div class="container">
+            <div id="typography">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="typography-line">
+                            <blockquote>
+                                <div class="blockquote blockquote-primary">
+                                    <div class="ocena">
+                                        <div *ngIf="postojiOcena(rez.idrezervacija)">
+                                            Moja ocena: <br>
+                                            {{trenutnaOcena.ocena}} <img src="assets/img/zvezda.png">
+                                        </div> 
+                                    </div>
+                                <h4> Smestaj: {{rez.idsmestaj.naziv}} </h4> <br> 
+                                    Datum prijave: {{rez.datumprijave}} <br>
+                                    Datum odjave:  {{rez.datumodjave}} <br>
+                                    Cena: {{rez.cenarezervacije}} din<br>
+                                    <div *ngIf="postojiOcena(rez.idrezervacija)">
+                                        Moj komentar: {{trenutnaOcena.komentar}} <br>
+                                    </div>
+                                    <div *ngIf="compareDatesAndCheckOcena(rez.datumodjave, rez.idrezervacija)">
+                                        <button (click)="oceni(rez.idrezervacija)" class="btn btn-primary btn-round btn-info"> Oceni boravak </button>
+                                        <div *ngIf='oceniKliknuto && rezervacijaId == rez.idrezervacija'>
+                                            <form role="form" [formGroup]="form" novalidate name="ocenaForm" >
+                                                <table>
+                                                    <tr> <th> Moja ocena: </th> <th> <input formControlName="ocena" type="text"> </th> </tr>
+                                                    <tr> <th> Komentar: </th> <th> <input formControlName="komentar" type="text"> </th> </tr>
+                                                </table>
+                                                <div class="desnoDugme"> <button (click)="oceniRezervaciju(rez.idrezervacija)" class="btn btn-primary btn-round btn-info" type="button">Oceni</button> </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="prosaoDatumPrijave(rez.datumprijave)">
+                                        <button (click)="otkaziRez(rez.idrezervacija, rez.datumprijave)" class="btn btn-primary btn-round btn-info">
+                                            Otkazi rezervaciju 
+                                        </button>
+                                    </div>
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #nemaRez>
+    Nemate rezervacija.
+  </ng-template>
